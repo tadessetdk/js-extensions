@@ -597,7 +597,7 @@ var stringExtensions = function(formatRegExps){
         },
     
         getFormatRegExp : function(pos) {
-            return formatRegExps[pos] || (new RegExp('\\{' + i + '\\}', 'g'));
+            return formatRegExps[pos] || (new RegExp('\\{' + pos + '\\}', 'g'));
         },
     
         format : function () {
