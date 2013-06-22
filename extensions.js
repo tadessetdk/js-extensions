@@ -1,4 +1,4 @@
-//Written by Tadesse D. Feyissa. May 17, 2013.
+//Written by Tadesse D. Feyissa. June 21, 2013.
 
 //Extends Object, String, Array... with commonly used methods 
 
@@ -570,43 +570,48 @@ var objectExtensions = {
 ExtensionsHelpers.extend(Object, objectExtensions);
 
 //String extensions
-var stringExtensions = {
+var stringExtensions = function(formatRegExps){
+    return {
+        trimLeft : function (ch) {
 
-    trimLeft : function (ch) {
+            ch = ch || ' ';
+            var pattern = new RegExp('^(' + ch + ')*');
+            var match = pattern.exec(this);
 
-        ch = ch || ' ';
-        var pattern = new RegExp('^(' + ch + ')*');
-        var match = pattern.exec(this);
+            return this.substr(match[0].length);
 
-        return this.substr(match[0].length);
+        },
 
-    },
+        trimRight : function (ch) {
 
-    trimRight : function (ch) {
+            ch = ch || ' ';
+            var pattern = new RegExp('(' + ch + ')*$');
+            var match = pattern.exec(this);
 
-        ch = ch || ' ';
-        var pattern = new RegExp('(' + ch + ')*$');
-        var match = pattern.exec(this);
+            return this.substr(0, this.length - match[0].length);
 
-        return this.substr(0, this.length - match[0].length);
+        },
 
-    },
+        trim : function (ch) {
+            return this.trimLeft(ch).trimRight(ch);
+        },
+    
+        getFormatRegExp : function(pos) {
+            return formatRegExps[pos] || (new RegExp('\\{' + i + '\\}', 'g'));
+        },
+    
+        format : function () {
 
-    trim : function (ch) {
-        return this.trimLeft(ch).trimRight(ch);
-    },
+            var result = this.substr(0);
+            for (var i = arguments.length - 1; i >= 0; i--) {
+                result = result.replace(getFormatRegExp(i), arguments[i]);
+            }
 
-    format : function () {
-
-        var result = this.substr(0);
-        for (var i = arguments.length - 1; i >= 0; i--) {
-            result = result.replace(new RegExp('\\{' + i + '\\}', 'g'), arguments[i]);
+            return result;
         }
-
-        return result;
     }
 
-};
+}([ /\{0\}/g, /\{1\}/g, /\{2\}/g, /\{3\}/g, /\{4\}/g, /\{5\}/g, /\{6\}/g, /\{7\}/g, /\{8\}/g, /\{9\}/g ]);
 
 //Extends String.prototype
 ExtensionsHelpers.extend(String, stringExtensions);
