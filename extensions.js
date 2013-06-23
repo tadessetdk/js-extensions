@@ -14,6 +14,25 @@ var ExtensionHelpers = {
         ((target.prototype[name]) || (target.prototype[name] = extensions[name]));
     }
     
+  },
+  
+  isNativeFunction: function(fn){
+  
+      if(!fn || (typeof fn).toLowerCase() != 'function'){
+          throw new TypeError('fn is not function');
+      }
+      
+      return /\{(\s)*\[native code\](\s)*\}(\s)*$/.test(fn.toString());
+      
+  },
+  
+  fnCall: function(fn, that){
+  
+      var isNative = this.isNativeFunction(fn);
+      
+      return isNative ? fn : (function(){
+         return fn.apply(that, arguments);
+      });
   }
 };
 
@@ -99,19 +118,6 @@ var ArrayHelpers = {
     
       return val;
     
-  },
-  
-  isNativeFunction: function(fn){
-      return !!fn && (typeof fn).toLowerCase() === 'function' && /\{(\s)*\[native code\](\s)*\}(\s)*$/.test(fn.toString());
-  },
-  
-  fnCall: function(fn, that){
-  
-      var isNative = ArrayHelpers.isNativeFunction(fn);
-      
-      return isNative ? fn : (function(){
-         return fn.apply(that, arguments);
-      });
   }
 };
     
@@ -129,7 +135,7 @@ var ArrayExtensions = {
   reduce: function(fn, initial){
    
       var result = initial;
-      var fnc = ArrayHelpers.fnCall(fn, this);
+      var fnc = ExtensionHelpers.fnCall(fn, this);
       
       for(var i = 0 , len = this.length ; i < len ; i++){
           result =  fnc(result, this[i], i);
@@ -148,7 +154,7 @@ var ArrayExtensions = {
   reduceRight: function(fn, initial){
    
       var result = initial;
-      var fnc = ArrayHelpers.fnCall(fn, this);
+      var fnc = ExtensionHelpers.fnCall(fn, this);
       
       for(var i = this.length - 1 ; i >= 0 ; i--){
           result =  fnc(result, this[i], i);
@@ -166,7 +172,7 @@ var ArrayExtensions = {
   where: function(fn){
    
       var result = [];
-      var fnc = ArrayHelpers.fnCall(fn, this);
+      var fnc = ExtensionHelpers.fnCall(fn, this);
       
       for(var i = 0 , len = this.length ; i < len ; i++){
           if(fnc(this[i], i)){
@@ -186,7 +192,7 @@ var ArrayExtensions = {
   some: function(fn){
    
     var result = [];
-    var fnc = ArrayHelpers.fnCall(fn, this);
+    var fnc = ExtensionHelpers.fnCall(fn, this);
     
     for(var i = 0 , len = this.length ; i < len ; i++){
         if(fnc(this[i], i)){
@@ -206,7 +212,7 @@ var ArrayExtensions = {
   every: function(fn){
    
     var result = [];
-    var fnc = ArrayHelpers.fnCall(fn, this);
+    var fnc = ExtensionHelpers.fnCall(fn, this);
     
     for(var i = 0 , len = this.length ; i < len ; i++){
         if(!fnc(this[i], i)){
@@ -226,7 +232,7 @@ var ArrayExtensions = {
   groupBy: function(fn){
    
     var result = {};
-    var fnc = ArrayHelpers.fnCall(fn, this);
+    var fnc = ExtensionHelpers.fnCall(fn, this);
     
     for(var i = 0 , len = this.length ; i < len ; i++){
         var val = this[i];
@@ -258,7 +264,7 @@ var ArrayExtensions = {
     
       if(this.length === 0 ) return;
       
-      var fnc = ArrayHelpers.fnCall(fn, this);
+      var fnc = ExtensionHelpers.fnCall(fn, this);
       
       for(var i = 0, len = this.length ; i < len ; i++){
           fnc(this[i], i);
@@ -274,7 +280,7 @@ var ArrayExtensions = {
   map: function(fn){
    
       var result = [];
-      var fnc = ArrayHelpers.fnCall(fn, this);
+      var fnc = ExtensionHelpers.fnCall(fn, this);
      
       for(var i = 0 , len = this.length ; i < len ; i++){
           result.push(fnc(this[i], i));
@@ -455,7 +461,7 @@ var ArrayExtensions = {
 
       if(this.length === 0 || !list || list.length === 0) return null;
       
-      var fnc = ArrayHelpers.fnCall(fn, this);
+      var fnc = ExtensionHelpers.fnCall(fn, this);
       var minLength = this.length < list.length ? this.length : list.length;
       var result = [];
       
@@ -575,20 +581,22 @@ var stringExtensions = function(formatRegExps){
         trimLeft : function (ch) {
 
             ch = ch || ' ';
-            var pattern = new RegExp('^(' + ch + ')*');
-            var match = pattern.exec(this);
-
-            return this.substr(match[0].length);
+            var pattern = new RegExp('^(' + ch + ')+');
+            var src = Object(this);
+            var match = pattern.exec(src);
+            
+            return !!match ? src.substr(match[0].length) : src;
 
         },
 
         trimRight : function (ch) {
 
             ch = ch || ' ';
-            var pattern = new RegExp('(' + ch + ')*$');
-            var match = pattern.exec(this);
+            var pattern = new RegExp('(' + ch + ')+$');
+            var src = Object(this);
+            var match = pattern.exec(src);
 
-            return this.substr(0, this.length - match[0].length);
+            return !!match ? src.substr(0, src.length - match[0].length) : src;
 
         },
 
