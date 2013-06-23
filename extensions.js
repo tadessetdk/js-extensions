@@ -588,7 +588,14 @@ var objectExtensions = {
 ExtensionHelpers.extend(Object, objectExtensions);
 
 //String extensions
-var stringExtensions = function(formatRegExps){
+var stringExtensions = function(){
+
+    var formatRegExps = [ /\{0\}/g, /\{1\}/g, /\{2\}/g, /\{3\}/g, /\{4\}/g, /\{5\}/g, /\{6\}/g, /\{7\}/g, /\{8\}/g, /\{9\}/g ];
+    
+    function getFormatRegExp(pos) {
+        return formatRegExps[pos] || (new RegExp('\\{' + pos + '\\}', 'g'));
+    }
+        
     return {
         trimLeft : function (ch) {
 
@@ -616,22 +623,18 @@ var stringExtensions = function(formatRegExps){
             return this.trimLeft(ch).trimRight(ch);
         },
     
-        getFormatRegExp : function(pos) {
-            return formatRegExps[pos] || (new RegExp('\\{' + pos + '\\}', 'g'));
-        },
-    
         format : function () {
 
             var result = Object(this);
             for (var i = arguments.length - 1; i >= 0; i--) {
-                result = result.replace(this.getFormatRegExp(i), arguments[i]);
+                result = result.replace(getFormatRegExp(i), arguments[i]);
             }
 
             return result;
         }
     }
 
-}([ /\{0\}/g, /\{1\}/g, /\{2\}/g, /\{3\}/g, /\{4\}/g, /\{5\}/g, /\{6\}/g, /\{7\}/g, /\{8\}/g, /\{9\}/g ]);
+}();
 
 //Extends String.prototype
 ExtensionHelpers.extend(String, stringExtensions);
