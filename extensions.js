@@ -135,10 +135,11 @@ var ArrayExtensions = {
   reduce: function(fn, initial){
    
       var result = initial;
-      var fnc = ExtensionHelpers.fnCall(fn, this);
+      var src = Object(this);
+      var fnc = ExtensionHelpers.fnCall(fn, src);
       
-      for(var i = 0 , len = this.length ; i < len ; i++){
-          result =  fnc(result, this[i], i);
+      for(var i = 0 , len = src.length ; i < len ; i++){
+          result =  fnc(result, src[i], i);
       }
       
       return result;
@@ -154,10 +155,11 @@ var ArrayExtensions = {
   reduceRight: function(fn, initial){
    
       var result = initial;
-      var fnc = ExtensionHelpers.fnCall(fn, this);
+      var src = Object(this);
+      var fnc = ExtensionHelpers.fnCall(fn, src);
       
-      for(var i = this.length - 1 ; i >= 0 ; i--){
-          result =  fnc(result, this[i], i);
+      for(var i = src.length - 1 ; i >= 0 ; i--){
+          result =  fnc(result, src[i], i);
       }
       
       return result;
@@ -172,11 +174,12 @@ var ArrayExtensions = {
   where: function(fn){
    
       var result = [];
-      var fnc = ExtensionHelpers.fnCall(fn, this);
+      var src = Object(this);
+      var fnc = ExtensionHelpers.fnCall(fn, src);
       
-      for(var i = 0 , len = this.length ; i < len ; i++){
-          if(fnc(this[i], i)){
-              result.push(this[i]);
+      for(var i = 0 , len = src.length ; i < len ; i++){
+          if(fnc(src[i], i)){
+              result.push(src[i]);
           }
       }
       
@@ -192,10 +195,11 @@ var ArrayExtensions = {
   some: function(fn){
    
     var result = [];
-    var fnc = ExtensionHelpers.fnCall(fn, this);
+    var src = Object(this);
+    var fnc = ExtensionHelpers.fnCall(fn, src);
     
-    for(var i = 0 , len = this.length ; i < len ; i++){
-        if(fnc(this[i], i)){
+    for(var i = 0 , len = src.length ; i < len ; i++){
+        if(fnc(src[i], i)){
             return true;
         }
     }
@@ -212,10 +216,11 @@ var ArrayExtensions = {
   every: function(fn){
    
     var result = [];
-    var fnc = ExtensionHelpers.fnCall(fn, this);
+    var src = Object(this);
+    var fnc = ExtensionHelpers.fnCall(fn, src);
     
-    for(var i = 0 , len = this.length ; i < len ; i++){
-        if(!fnc(this[i], i)){
+    for(var i = 0 , len = src.length ; i < len ; i++){
+        if(!fnc(src[i], i)){
             return false;
         }
     }
@@ -232,10 +237,11 @@ var ArrayExtensions = {
   groupBy: function(fn){
    
     var result = {};
-    var fnc = ExtensionHelpers.fnCall(fn, this);
+    var src = Object(this);
+    var fnc = ExtensionHelpers.fnCall(fn, src);
     
-    for(var i = 0 , len = this.length ; i < len ; i++){
-        var val = this[i];
+    for(var i = 0 , len = src.length ; i < len ; i++){
+        var val = src[i];
         var key = fnc(val, i);
         (result[key]) ? (result[key].push(val)) : (result[key] = [val]);
     }
@@ -262,12 +268,13 @@ var ArrayExtensions = {
   */
   each: function(fn){
     
-      if(this.length === 0 ) return;
+      var src = Object(this);
+      if(src.length === 0 ) return;
       
-      var fnc = ExtensionHelpers.fnCall(fn, this);
+      var fnc = ExtensionHelpers.fnCall(fn, src);
       
-      for(var i = 0, len = this.length ; i < len ; i++){
-          fnc(this[i], i);
+      for(var i = 0, len = src.length ; i < len ; i++){
+          fnc(src[i], i);
       }
     
   },
@@ -280,10 +287,11 @@ var ArrayExtensions = {
   map: function(fn){
    
       var result = [];
-      var fnc = ExtensionHelpers.fnCall(fn, this);
+      var src = Object(this);
+      var fnc = ExtensionHelpers.fnCall(fn, src);
      
-      for(var i = 0 , len = this.length ; i < len ; i++){
-          result.push(fnc(this[i], i));
+      for(var i = 0 , len = src.length ; i < len ; i++){
+          result.push(fnc(src[i], i));
       }
       
       return result;
@@ -299,14 +307,14 @@ var ArrayExtensions = {
   pluck: function(props, includeEmptyValue){ 
      
       var result = [];
-      
+      var src = Object(this);
       var proc = ((props instanceof Array) && (props.length > 1)) ? 
                       ArrayHelpers.multiplePropertiesPluck : 
                       ArrayHelpers.singlePropertyPluck;
       
-      for(var i = 0 , len = this.length ; i < len ; i++){
+      for(var i = 0 , len = src.length ; i < len ; i++){
       
-        var val = proc(props, this[i]);
+        var val = proc(props, src[i]);
         
         if(includeEmptyValue || (!includeEmptyValue && val)){
             result.push(val); 
@@ -459,14 +467,15 @@ var ArrayExtensions = {
   */
   merge: function(list, fn){ 
 
-      if(this.length === 0 || !list || list.length === 0) return null;
+      var src = Object(this);
+      if(src.length === 0 || !list || list.length === 0) return null;
       
-      var fnc = ExtensionHelpers.fnCall(fn, this);
-      var minLength = this.length < list.length ? this.length : list.length;
+      var fnc = ExtensionHelpers.fnCall(fn, src);
+      var minLength = src.length < list.length ? src.length : list.length;
       var result = [];
       
       for(var i = 0; i < minLength ; i++){
-          result.push(fnc(this[i], list[i]));
+          result.push(fnc(src[i], list[i]));
       }
       
       return result;
@@ -480,9 +489,10 @@ var ArrayExtensions = {
   */
   intersect: function(list, fn){ 
 
-      if(this.length === 0 || !list || list.length === 0) return null;
+      var src = Object(this);
+      if(src.length === 0 || !list || list.length === 0) return null;
       
-      var l1 = this.distinct();
+      var l1 = src.distinct();
       var l2 = list.distinct();
     
       var shortList = l1.length < l2.length ? l1 : l2;
@@ -513,9 +523,10 @@ var ArrayExtensions = {
   */
   union: function(list){ 
   
-      if(this.length === 0 && (!list || list.length === 0)) return null;
+      var src = Object(this);
+      if(src.length === 0 && (!list || list.length === 0)) return null;
       
-      var l1 = this.distinct();
+      var l1 = src.distinct();
       var l2 = (list || []).distinct();
       
       for(var i = 0, len = l2.length ; i < len ; i++){
@@ -534,21 +545,22 @@ var ArrayExtensions = {
   */
   randomize: function(fn){ 
   
-      if(this.length === 0) return this;
+      var src = Object(this);
+      if(src.length === 0) return src;
      
-      var i = this.length;
+      var i = src.length;
       
       while(i){
         
           var indx = parseInt(Math.random() * i);
-          var t = this[i-1];
-          this[i-1] = this[indx];
-          this[indx] = t;
+          var t = src[i-1];
+          src[i-1] = src[indx];
+          src[indx] = t;
           
           i--;
       }
      
-     return this;
+     return src;
      
   }
   
@@ -573,7 +585,7 @@ var objectExtensions = {
 };
 
 //Extends Object.prototype
-ExtensionsHelpers.extend(Object, objectExtensions);
+ExtensionHelpers.extend(Object, objectExtensions);
 
 //String extensions
 var stringExtensions = function(formatRegExps){
@@ -610,9 +622,9 @@ var stringExtensions = function(formatRegExps){
     
         format : function () {
 
-            var result = this.substr(0);
+            var result = Object(this);
             for (var i = arguments.length - 1; i >= 0; i--) {
-                result = result.replace(getFormatRegExp(i), arguments[i]);
+                result = result.replace(this.getFormatRegExp(i), arguments[i]);
             }
 
             return result;
@@ -622,4 +634,4 @@ var stringExtensions = function(formatRegExps){
 }([ /\{0\}/g, /\{1\}/g, /\{2\}/g, /\{3\}/g, /\{4\}/g, /\{5\}/g, /\{6\}/g, /\{7\}/g, /\{8\}/g, /\{9\}/g ]);
 
 //Extends String.prototype
-ExtensionsHelpers.extend(String, stringExtensions);
+ExtensionHelpers.extend(String, stringExtensions);
