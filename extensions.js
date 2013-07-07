@@ -414,7 +414,9 @@ var ArrayExtensions = {
       var result = [];
       
       for(var i in temp){
-          result.push(temp[i]);
+          if(temp.hasOwnProperty(i)){
+             result.push(temp[i]);
+          }
       }
       
       return result;
@@ -576,7 +578,7 @@ var objectExtensions = {
         var _keys = [];
         for (k in this) {
             if (this.hasOwnProperty(k)) {
-                _keys.unshift(k);
+                _keys.push(k);
             }
         }
 
@@ -590,12 +592,8 @@ ExtensionHelpers.extend(Object, objectExtensions);
 //String extensions
 var stringExtensions = function(){
 
-    var formatRegExps = [ /\{0\}/g, /\{1\}/g, /\{2\}/g, /\{3\}/g, /\{4\}/g, /\{5\}/g, /\{6\}/g, /\{7\}/g, /\{8\}/g, /\{9\}/g ];
-    
-    function getFormatRegExp(pos) {
-        return formatRegExps[pos] || (new RegExp('\\{' + pos + '\\}', 'g'));
-    }
-        
+    var formatRegExps = /(?:\{\d\})+/g;
+         
     return {
         trimLeft : function (ch) {
 
@@ -626,11 +624,12 @@ var stringExtensions = function(){
         format : function () {
 
             var result = Object(this);
-            for (var i = arguments.length - 1; i >= 0; i--) {
-                result = result.replace(getFormatRegExp(i), arguments[i]);
-            }
+            var args = arguments;
+            
+            return result.replace(formatRegExps, function(s){ 
+                      return args[parseInt(s.substr(1, s.length-2))] 
+                   });
 
-            return result;
         }
     }
 
