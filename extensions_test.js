@@ -558,6 +558,22 @@ test("reduce-1 unit test", function() {
   
   ////////////////////////
 
+  test("String.format() 4 unit test", function() {
+   
+     equal('abc-{{0}}'.format('ftp',11), 'abc-{ftp}', "Passed!");
+    
+  }); 
+  
+  ////////////////////////
+
+  test("String.format() 5 unit test", function() {
+   
+     equal('abc-{{0}\\{1}}'.format('ftp',11), 'abc-{ftp\\11}', "Passed!");
+    
+  }); 
+  
+  ////////////////////////
+
   test("Object.keys() 1 unit test", function() {
      
     deepEqual({id:3, name:'john',dob:'23/12/1988'}.keys(), ['id', 'name', 'dob'], "Passed!");
