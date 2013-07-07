@@ -86,6 +86,54 @@ test("reduce-1 unit test", function() {
   
   ////////////////////////
 
+  test("some 1 unit test", function() {
+ 
+    equal(
+        [5,2,1,-1,7,-4,8.3].some(function(v){
+            return v % 2 == 0; 
+        }
+    ), true, "Passed!" );
+      
+  });
+  
+  ////////////////////////
+
+  test("some 2 unit test", function() {
+ 
+    equal(
+        [5,8.3].some(function(v){
+            return v % 2 == 0; 
+        }
+    ), false, "Passed!" );
+      
+  });
+  
+  ////////////////////////
+
+  test("every 1 unit test", function() {
+ 
+    equal(
+        [5,2,1,-1,7,-4,8.3].every(function(v){
+            return v % 2 == 0; 
+        }
+    ), false, "Passed!" );
+      
+  });
+  
+  ////////////////////////
+
+  test("every 2 unit test", function() {
+ 
+    equal(
+        [2,6,0,-8].every(function(v){
+            return v % 2 == 0; 
+        }
+    ), true, "Passed!" );
+      
+  });
+  
+  ////////////////////////
+
   test("groupBy-1 unit test", function() {
  
     deepEqual(
