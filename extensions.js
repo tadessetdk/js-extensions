@@ -101,15 +101,14 @@ var ArrayHelpers = {
   */ 
   multiplePropertiesPluck: function(props, obj){ 
     
-      var val;
+      var val = {};
      
       for(var i = 0, len = props.length ; i < len ; i++){
         
           var prop = props[i]; 
           
           if(obj.hasOwnProperty(prop) && obj[prop]){
-             
-             (val || (val = {}));
+                       
               val[prop] = obj[prop];
 
           }
@@ -590,7 +589,7 @@ var objectExtensions = {
 ExtensionHelpers.extend(Object, objectExtensions);
 
 //String extensions
-var stringExtensions = function(){
+var stringExtensions = (function(){
 
     var formatRegExps = /(?:\{\d\})+/g;
          
@@ -627,13 +626,13 @@ var stringExtensions = function(){
             var args = arguments;
             
             return result.replace(formatRegExps, function(s){ 
-                      return args[parseInt(s.substr(1, s.length-2))] 
+                      return args[parseInt(s.substr(1, s.length - 2))] 
                    });
 
         }
     }
 
-}();
+}());
 
 //Extends String.prototype
 ExtensionHelpers.extend(String, stringExtensions);
