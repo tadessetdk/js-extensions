@@ -406,7 +406,7 @@ var ArrayExtensions = {
       var temp = {};
       
       for(var i = 0 , len = this.length ; i < len ; i++){
-          var key =  '_' + ((typeof(this[i]) === 'number') ? '_' : '' ) + this[i];
+          var key =  '_' + ((typeof(this[i]).toLowerCase() === 'number') ? '_' : '' ) + this[i];
           temp[key] = this[i];
       }
      
@@ -542,7 +542,7 @@ var ArrayExtensions = {
 
  /*
   randomize:    randomize the items
-  returns:      the array with random order; original array is affected
+  returns:      the array with random order; original array is not affected
   */
   randomize: function(fn){ 
   
