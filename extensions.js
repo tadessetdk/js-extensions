@@ -1,7 +1,7 @@
 //Written by Tadesse D. Feyissa. June 21, 2013.
 
 //Extends Object, String, Array... with commonly used methods 
-
+(function(){
 var ExtensionHelpers = {
    /*
     extend:       extends Array.prototype 
@@ -636,3 +636,4 @@ var stringExtensions = (function(){
 
 //Extends String.prototype
 ExtensionHelpers.extend(String, stringExtensions);
+})();
