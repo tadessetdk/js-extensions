@@ -591,7 +591,7 @@ ExtensionHelpers.extend(Object, objectExtensions);
 //String extensions
 var stringExtensions = (function(){
 
-    var formatRegExps = /(?:\{\d\})+/g;
+    var formatRegExps = /(?:\{\d+\})/g;
          
     return {
         trimLeft : function (ch) {
